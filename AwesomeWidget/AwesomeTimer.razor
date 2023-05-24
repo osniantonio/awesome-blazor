@@ -1,0 +1,44 @@
+<button @onclick="OnClick">
+    @ButtonText the Awesomeness from @Host
+</button>
+@if (showTimer)
+{
+    <span>
+        @theTime
+    </span>
+}
+
+@code {
+    string theTime = "00:00:00";
+    Timer timer;
+
+    [Parameter]
+    public string Host {get; set;}
+
+    public string ButtonText => showTimer ? "Stop" : "Start";
+
+    bool showTimer = false;
+
+    protected override void OnInitialized()
+    {
+        timer = new Timer(Tick, null, 0, 100);        
+    }    
+
+    private void Tick(object state)
+    {
+        theTime = DateTime.Now.ToString("HH:mm:ss:fff");
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        timer.Dispose();
+    }
+
+    void OnClick()
+    {
+        showTimer = !showTimer;
+        StateHasChanged();
+    }
+}
+
